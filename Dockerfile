@@ -1,10 +1,28 @@
-FROM ubuntu:16.04
-MAINTAINER Guy Taylor <thebigguy.co.uk@gmail.com>
+FROM rust as builder
 
-ENV UNAME pacat
+WORKDIR /opt
+
+RUN apt update \
+ && apt -y install git \
+ && git clone https://github.com/hrkfdn/ncspot.git \
+ && cd ncspot \
+ && cargo install cargo-deb \
+ && cargo deb \
+ && apt -y purge git \
+ && cat /var/log/apt/history.log| grep Install: | sed "s/([^)]*)//g" | sed "s,\ \,\ ,\ ,g" | sed "s,Install: ,,g" | xargs apt remove -y \
+ && rm -rf /var/cache/apt/lists/* \
+ && mv /opt/ncspot/target/debian/*.deb /opt \
+ && rm -rf /opt/ncspot
+
+FROM debian:stable-slim
+
+ENV UNAME ncspot
+
+COPY --from=builder /opt/*.deb /opt/
 
 RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install --yes pulseaudio-utils
+ && DEBIAN_FRONTEND=noninteractive apt install --yes pulseaudio-utils /opt/*.deb \
+ && rm -rf /var/cache/apt/lists/*
 
 # Set up the user
 RUN export UNAME=$UNAME UID=1000 GID=1000 && \
@@ -20,7 +38,6 @@ RUN export UNAME=$UNAME UID=1000 GID=1000 && \
 COPY pulse-client.conf /etc/pulse/client.conf
 
 USER $UNAME
-ENV HOME /home/pacat
+ENV HOME /home/${UNAME}
 
-# run
-CMD ["pacat", "-vvvv", "/dev/urandom"]
+ENTRYPOINT ncspot

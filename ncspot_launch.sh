@@ -3,7 +3,7 @@
 set -x
 
 echo "Searching for Docker image ..."
-DOCKER_IMAGE_ID=$(docker images --format="{{.ID}}" docker-pulseaudio-example:latest | head -n 1)
+DOCKER_IMAGE_ID=$(docker images --format="{{.ID}}" docker-ncspot:latest | head -n 1)
 echo "Found and using ${DOCKER_IMAGE_ID}"
 
 USER_UID=$(id -u)
