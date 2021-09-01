@@ -3,7 +3,7 @@ FROM rust:slim-bullseye as builder
 WORKDIR /opt
 
 RUN apt update \
- && apt -y install libncursesw5-dev libdbus-1-dev libpulse-dev libssl-dev libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev \
+ && apt -y install git libncursesw5-dev libdbus-1-dev libpulse-dev libssl-dev libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev \
  && git clone https://github.com/hrkfdn/ncspot.git \
  && cd ncspot \
  && cargo install cargo-deb \
