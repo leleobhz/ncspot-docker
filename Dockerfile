@@ -20,7 +20,7 @@ ENV UNAME ncspot
 
 COPY --from=builder /opt/*.deb /opt/
 
-RUN apt-get update \
+RUN apt update \
  && DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --yes ca-certificates pulseaudio-utils /opt/*.deb \
  && rm -rf /var/cache/apt/lists/*
 
