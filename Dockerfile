@@ -2,15 +2,10 @@ FROM rust as builder
 
 WORKDIR /opt
 
-RUN apt update \
- && apt -y install git \
- && git clone https://github.com/hrkfdn/ncspot.git \
+RUN git clone https://github.com/hrkfdn/ncspot.git \
  && cd ncspot \
  && cargo install cargo-deb \
  && cargo deb \
- && apt -y purge git \
- && cat /var/log/apt/history.log| grep Install: | sed "s/([^)]*)//g" | sed "s,\ \,\ ,\ ,g" | sed "s,Install: ,,g" | xargs apt remove -y \
- && rm -rf /var/cache/apt/lists/* \
  && mv /opt/ncspot/target/debian/*.deb /opt \
  && rm -rf /opt/ncspot
 
