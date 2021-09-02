@@ -18,6 +18,7 @@ docker run --name ncspot --rm -it \
   -e "PULSE_SERVER=unix:/run/pulse/native" \
   --volume="/run/user/${USER_UID}/pulse:/run/pulse" \
   --volume="/run/user/${USER_UID}/bus:/run/dbus" \
+  --volume="${HOME}/.config/pulse/:/home/ncspot/.config/pulse/" \
   --volume="${HOME}/.config/ncspot/:/home/ncspot/.config/ncspot/" \
   --volume="${HOME}/.cache/ncspot/:/home/ncspot/.cache/ncspot/" \
   ${DOCKER_IMAGE_ID} \
