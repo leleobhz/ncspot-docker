@@ -6,9 +6,10 @@ A Docker version of [ncspot](https://github.com/hrkfdn/ncspot/) based on [docker
 
 * NCurses working perfectly
 * Pulseaudio working perfectly
-* Localization working perfectly (But upstream apparently only provides English)
 * DBus passthrough working perfectly
 * MPRIS interface working perfectly
+* X11 interface working perfectly (Allowing share-to-clipboard feature)
+* Localization working perfectly (But upstream apparently only provides English)
 * Docker rootless working perfectly
 
 ## Screenshot with MPRIS interface

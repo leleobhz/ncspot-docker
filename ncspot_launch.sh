@@ -14,8 +14,10 @@ docker run --name ncspot --rm -it \
   -e LANG \
   -e LC_ALL \
   -e LANGUAGE \
+  -e DISPLAY \
   -e "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus" \
   -e "PULSE_SERVER=unix:/run/pulse/native" \
+  --volume="/tmp/.X11-unix:/tmp/.X11-unix" \
   --volume="/run/user/${USER_UID}/pulse:/run/pulse" \
   --volume="/run/user/${USER_UID}/bus:/run/dbus" \
   --volume="${HOME}/.config/pulse/:/home/ncspot/.config/pulse/" \
