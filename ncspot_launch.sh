@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+mytitle="Spotify"
+echo -e '\033]2;'$mytitle'\007'
+
 echo "Searching for Docker image ..."
 DOCKER_IMAGE_ID=$(docker images --format="{{.ID}}" docker-ncspot:latest | head -n 1)
 echo "Found and using ${DOCKER_IMAGE_ID}"
