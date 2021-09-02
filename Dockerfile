@@ -21,7 +21,7 @@ ENV UNAME ncspot
 COPY --from=builder /opt/*.deb /opt/
 
 RUN apt update \
- && DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --yes ca-certificates pulseaudio-utils /opt/*.deb \
+ && DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --yes locales locales-all ca-certificates pulseaudio-utils /opt/*.deb \
  && rm -rf /var/cache/apt/lists/*
 
 # Set up the user
@@ -34,6 +34,10 @@ RUN export UNAME=$UNAME UID=1000 GID=1000 && \
     chmod 0440 /etc/sudoers.d/${UNAME} && \
     chown ${UID}:${GID} -R /home/${UNAME} && \
     gpasswd -a ${UNAME} audio
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 COPY pulse-client.conf /etc/pulse/client.conf
 
