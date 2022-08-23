@@ -18,10 +18,9 @@ USER_UID=$(id -u)
 mkdir -p /home/leonardo/.config/ncspot/
 mkdir -p /home/leonardo/.cache/ncspot/
 
-sudo podman run --name ncspot --rm -it \
-  --privileged \
-  --security-opt label=disable \
-  --pid=host \
+podman run --name ncspot --rm -it \
+  --user ${USER_UID} \
+  --userns keep-id \
   -e TERM \
   -e LANG \
   -e LC_ALL \
@@ -32,8 +31,8 @@ sudo podman run --name ncspot --rm -it \
   --volume="/tmp/.X11-unix:/tmp/.X11-unix" \
   --volume="/run/user/${USER_UID}/pulse:/run/pulse" \
   --volume="/run/user/${USER_UID}/bus:/run/dbus" \
-  --volume="${HOME}/.config/pulse/:/home/ncspot/.config/pulse/" \
-  --volume="${HOME}/.config/ncspot/:/home/ncspot/.config/ncspot/" \
-  --volume="${HOME}/.cache/ncspot/:/home/ncspot/.cache/ncspot/" \
+  --volume="${HOME}/.config/pulse/:/home/ncspot/.config/pulse/:Z" \
+  --volume="${HOME}/.config/ncspot/:/home/ncspot/.config/ncspot/:Z" \
+  --volume="${HOME}/.cache/ncspot/:/home/ncspot/.cache/ncspot/:Z" \
   docker-ncspot:latest \
   ${@}

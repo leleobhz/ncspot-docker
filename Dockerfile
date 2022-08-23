@@ -2,9 +2,11 @@ FROM rust:slim-bullseye as builder
 
 WORKDIR /opt
 
+ARG TAG=v0.11.0
+
 RUN apt update \
- && apt -y install git libncursesw5-dev libdbus-1-dev libpulse-dev libssl-dev libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev \
- && git clone https://github.com/hrkfdn/ncspot.git \
+ && DEBIAN_FRONTEND=noninteractive apt -y install git libncursesw5-dev libdbus-1-dev libpulse-dev libssl-dev libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev \
+ && git clone --depth=1 --single-branch --branch=${TAG} https://github.com/hrkfdn/ncspot.git \
  && cd ncspot \
  && cargo install cargo-deb \
  && cargo deb \
@@ -21,7 +23,7 @@ ENV UNAME ncspot
 COPY --from=builder /opt/*.deb /opt/
 
 RUN apt update \
- && DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --yes locales locales-all ca-certificates pulseaudio-utils /opt/*.deb \
+ && DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --yes locales locales-all ca-certificates pulseaudio-utils libxcb-shape0 libxcb-xfixes0 libncursesw6 /opt/*.deb \
  && rm -rf /var/cache/apt/lists/*
 
 # Set up the user
@@ -41,7 +43,12 @@ ENV LC_ALL en_US.UTF-8
 
 COPY pulse-client.conf /etc/pulse/client.conf
 
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+
 USER $UNAME
 ENV HOME /home/${UNAME}
 
-ENTRYPOINT ncspot
+ENTRYPOINT [ "/tini", "--" ] 
+CMD [ "ncspot" ]
