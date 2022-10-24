@@ -2,7 +2,7 @@ FROM rust:slim-bullseye as builder
 
 WORKDIR /opt
 
-ARG TAG=v0.11.0
+ARG TAG=v0.11.2
 
 RUN apt update \
  && DEBIAN_FRONTEND=noninteractive apt -y install git libncursesw5-dev libdbus-1-dev libpulse-dev libssl-dev libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev \
